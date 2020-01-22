@@ -61,18 +61,17 @@ TEST_CASE ("am or pm")
     CHECK(t2.is_am());
 }
 
-// the following line will halt the compilation process. Move it
-// one test case at the time and then start creating your own test
-// cases
-#if 0
-
-
 TEST_CASE ("Convert to string" )
 {
     CHECK( Time{12,12,12}.to_string()     ==    "12:12:12" );
     CHECK( Time{12, 1, 2}.to_string()     ==    "12:01:02" );
     CHECK( Time{14,33,12}.to_string(true) == "02:33:12 pm" );
 }
+
+// the following line will halt the compilation process. Move it
+// one test case at the time and then start creating your own test
+// cases
+#if 0
 
 TEST_CASE ("Conversion to string" )
 {

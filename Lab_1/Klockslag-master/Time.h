@@ -10,7 +10,8 @@ class Time {
     int hour();
     int minute();
     int second();
-    int is_am();
+    bool is_am();
+    std::string to_string(bool am_pm_format = false);
     // konstruktor för att bestämma antalet argument
     Time(int h, int m, int s);
     Time(std::string s);
@@ -21,21 +22,8 @@ class Time {
     int hh{};
     int mm{};
     int ss{};
-    void constructHelper()
-    {
-      if(this->hh > 23 || this->hh < 0)
-      {
-          throw std::overflow_error("Out of border"); // throws an exception
-      }
-      else if(this->mm > 59 || this->mm < 0)
-      {
-          throw std::overflow_error("Out of border");
-      }
-      else if(this->ss > 59 || this->ss < 0)
-      {
-          throw std::overflow_error("Out of border");
-      }
-    }
+    void constructHelper();
+    int calculateOffset();
 };
 
 #endif
