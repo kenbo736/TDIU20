@@ -18,17 +18,13 @@ using namespace std;
 
 TEST_CASE ("Default constructor")
 {
-    times t;
+    Time t;
 
-    //CHECK(t.hour() == 0);
-    //CHECK(t.minute() == 0);
-    //CHECK(t.second() == 0);
+    CHECK(t.hour() == 0);
+    CHECK(t.minute() == 0);
+    CHECK(t.second() == 0);
 }
 
-// the following line will halt the compilation process. Move it
-// one test case at the time and then start creating your own test
-// cases
-#if 0
 TEST_CASE ( "Constructor with numeric arguments" )
 {
     Time t{12,13,14};
@@ -64,6 +60,12 @@ TEST_CASE ("am or pm")
     Time t2{1,2,3};
     CHECK(t2.is_am());
 }
+
+// the following line will halt the compilation process. Move it
+// one test case at the time and then start creating your own test
+// cases
+#if 0
+
 
 TEST_CASE ("Convert to string" )
 {
