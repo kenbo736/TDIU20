@@ -17,6 +17,7 @@ class Time {
     Time(std::string s);
     Time()
     {}
+    friend std::ostream& operator<<(std::ostream& os, const Time& ti);
 
   private:
     int hh{};
@@ -25,6 +26,9 @@ class Time {
     void constructHelper();
     int calculateOffset();
 };
+
+std::string string(Time ti);
+
 
 #endif
 // Denna fil ska innehålla deklarationer för de typer och funktioner

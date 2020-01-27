@@ -69,7 +69,8 @@ std::string Time::to_string(bool am_pm_format)
   //int offset{calculateOffset()};
 
   inStream << std::setfill('0') << std::setw(2) << hh+(am_pm_format ? calculateOffset() : 0) << ":" 
-           << std::setfill('0') << std::setw(2) << mm << ":" << std::setfill('0') << std::setw(2) << ss << std::setw(0) << (am_pm_format ? am_pm : "");
+           << std::setfill('0') << std::setw(2) << mm << ":" << std::setfill('0') << std::setw(2) 
+           << ss << std::setw(0) << (am_pm_format ? am_pm : "");
   
   return inStream.str();
 }
@@ -89,5 +90,19 @@ int Time::calculateOffset()
     return -12;
   }
 }
+
+std::string string(Time ti)
+{
+  return ti.to_string();
+}
+
+std::ostream& operator<<(std::ostream& os, const Time& ti)
+{
+    os << std::setfill('0') << std::setw(2) << ti.hh << ':' 
+       << std::setfill('0') << std::setw(2) << ti.mm << ':' 
+       << std::setfill('0') << std::setw(2) << ti.ss;
+    return os;
+}
+
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h

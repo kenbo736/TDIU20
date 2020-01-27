@@ -5,8 +5,7 @@
 #include "catch.hpp"
 #include "Time.h"
 
-using namespace std;
-
+//using namespace std;
 // här lägger ni era testfall. 
 // Jobba enligt TDD; 
 //  1. Lägg till testfall
@@ -68,15 +67,36 @@ TEST_CASE ("Convert to string" )
     CHECK( Time{14,33,12}.to_string(true) == "02:33:12 pm" );
 }
 
-// the following line will halt the compilation process. Move it
-// one test case at the time and then start creating your own test
-// cases
-#if 0
-
 TEST_CASE ("Conversion to string" )
 {
     CHECK( string(Time{2,4,1}) == "02:04:01" );
 }
+
+TEST_CASE ("Output operator" )
+{
+    std::stringstream ss;
+    SECTION("Simple output")
+    {
+        ss << Time{2,5,1};
+        CHECK(ss.str() == "02:05:01");
+    }
+    SECTION("Chained output")
+    {
+        ss << Time{23,10,32} << "---";
+        CHECK(ss.str() == "23:10:32---");
+    }
+    SECTION("Const time")
+    {
+        Time const t{23,23,23};
+        ss << t;
+        CHECK(ss.str() == "23:23:23");
+    }
+}
+
+// the following line will halt the compilation process. Move it
+// one test case at the time and then start creating your own test
+// cases
+#if 0
 
 TEST_CASE ("Output operator" )
 {
