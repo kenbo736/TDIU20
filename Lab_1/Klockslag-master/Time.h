@@ -17,7 +17,8 @@ class Time {
     Time(std::string s);
     Time()
     {}
-    friend std::ostream& operator<<(std::ostream& os, const Time& ti);
+    friend std::ostream& operator<<(std::ostream &os, const Time &ti); //fråga om friend
+    Time operator+(Time const &t1) const; //const igen????
 
   private:
     int hh{};
@@ -28,8 +29,6 @@ class Time {
 };
 
 std::string string(Time ti);
-
-
 #endif
 // Denna fil ska innehålla deklarationer för de typer och funktioner
 // som behövs

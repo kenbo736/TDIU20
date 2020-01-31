@@ -93,30 +93,23 @@ TEST_CASE ("Output operator" )
     }
 }
 
+TEST_CASE ("addition of a second")
+{
+    Time t2{1,2,4};
+    Time t1{0,0,5};
+    Time t3{0,0,57};
+    Time t4{0,58,0};
+    Time t5{0,58,57};
+    CHECK(string(t2+t1) == "01:02:09");
+    CHECK(string(t2+t3) == "01:03:01");
+    CHECK(string(t2+t4) == "02:00:04");
+    CHECK(string(t2+t5) == "02:01:01");
+}
+
 // the following line will halt the compilation process. Move it
 // one test case at the time and then start creating your own test
 // cases
 #if 0
 
-TEST_CASE ("Output operator" )
-{
-    stringstream ss;
-    SECTION("Simple output")
-    {
-        ss << Time{2,5,1};
-        CHECK(ss.str() == "02:05:01");
-    }
-    SECTION("Chained output")
-    {
-        ss << Time{23,10,32} << "---";
-        CHECK(ss.str() == "23:10:32---");
-    }
-    SECTION("Const time")
-    {
-        Time const t{23,23,23};
-        ss << t;
-        CHECK(ss.str() == "23:23:23");
-    }
-}
 #endif
 
