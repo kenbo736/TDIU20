@@ -102,8 +102,8 @@ TEST_CASE ("addition of a second")
     CHECK(string(t2+Time{1,59,5}) == "03:01:09");
     CHECK(string(t2+Time{0,58,57}) == "02:01:01");
     //CHECK(string(t2+Time{0,59,52}) == "02:02:01"); //hel menut extra!?????
-    //CHECK(string(t2+Time{0,57,57}) == "01:59:01");
-    //CHECK(string(t2+Time{0,56,57}) == "02:02:01");
+    CHECK(string(t2+Time{0,57,57}) == "02:00:01");
+    CHECK(string(t2+Time{0,56,57}) == "01:59:01");
 }
 
 // the following line will halt the compilation process. Move it

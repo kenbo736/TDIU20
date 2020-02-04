@@ -18,7 +18,7 @@ class Time {
     Time()
     {}
     friend std::ostream& operator<<(std::ostream &os, const Time &ti); //fråga om friend
-    Time operator+(Time const &t1) const; //const igen????
+    Time operator+(const Time &rhs) const; //const igen????
 
   private:
     int hh{};

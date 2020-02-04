@@ -104,17 +104,16 @@ std::ostream& operator<<(std::ostream& os, const Time& ti)
     return os;
 }
 
-Time Time::operator+(const Time &t1) const
+Time Time::operator+(const Time &rhs) const
 { 
   Time t3;
-  t3.ss = ss + t1.ss;
-  t3.mm = mm + t1.mm;
-  t3.hh = hh + t1.hh;
-  if (t3.hh > 23)
+  t3.ss = ss + rhs.ss;
+  t3.mm = mm + rhs.mm;
+  t3.hh = hh + rhs.hh;
+  if (t3.ss > 59)
   {
-    t3.hh = 0;
-    t3.mm = 0;
-    t3.ss = 0;
+    t3.mm = t3.mm + 1;
+    t3.ss = t3.ss % 60;
   }
 
   if (t3.mm > 59)
@@ -122,13 +121,13 @@ Time Time::operator+(const Time &t1) const
     t3.hh = t3.hh + 1;
     t3.mm = t3.mm % 60;
   }
-
-  if (t3.ss > 59)
-  {
-    t3.mm = mm + 1;
-    t3.ss = t3.ss % 60;
-  }
   
+  if (t3.hh > 23)
+  {
+    t3.hh = 0;
+    t3.mm = 0;
+    t3.ss = 0;
+  }
   return t3; 
 }
 // I denna fil läggs definitionerna (implementationen) av de funktioner
