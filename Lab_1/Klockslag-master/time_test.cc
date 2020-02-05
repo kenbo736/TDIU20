@@ -101,11 +101,33 @@ TEST_CASE ("addition of a second")
     CHECK(string(t2+Time{0,58,0}) == "02:00:04");
     CHECK(string(t2+Time{1,59,5}) == "03:01:09");
     CHECK(string(t2+Time{0,58,57}) == "02:01:01");
-    //CHECK(string(t2+Time{0,59,52}) == "02:02:01"); //hel menut extra!?????
     CHECK(string(t2+Time{0,57,57}) == "02:00:01");
     CHECK(string(t2+Time{0,56,57}) == "01:59:01");
 }
 
+TEST_CASE ("subtraction of a second")
+{
+    Time t2{2,2,4};
+    CHECK(string(t2-Time{0,0,1}) == "02:02:03");
+    CHECK(string(t2-Time{0,0,5}) == "02:01:59");
+    CHECK(string(t2-Time{0,3,0}) == "01:59:04");
+    CHECK(string(t2-Time{0,3,5}) == "01:58:59");
+    CHECK(string(t2-Time{1,3,5}) == "00:58:59");
+}
+
+TEST_CASE ("add of one")
+{
+    CHECK(string(++Time{0,58,58}) == "00:58:59");
+    CHECK(string(++Time{0,58,59}) == "00:59:00");
+    CHECK(string(++Time{0,59,59}) == "01:00:00");
+}
+
+TEST_CASE ("remove of one")
+{
+    CHECK(string(--Time{0,58,58}) == "00:58:57");
+    CHECK(string(--Time{0,58,0}) == "00:57:59");
+    CHECK(string(--Time{1,0,0}) == "00:59:59");
+}
 // the following line will halt the compilation process. Move it
 // one test case at the time and then start creating your own test
 // cases
