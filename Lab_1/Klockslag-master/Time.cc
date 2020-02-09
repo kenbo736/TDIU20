@@ -49,6 +49,19 @@ int Time::second()
 {
   return ss;
 }
+/*
+void Time::set_hour(int in_h)
+{
+  this->hh=in_h;
+}
+void Time::set_minute(int in_m)
+{
+  this->mm=in_m;
+}
+void Time::set_second(int in_s)
+{
+  this->ss=in_s;
+}*/
 
 bool Time::is_am()
 {
@@ -102,6 +115,13 @@ std::ostream& operator<<(std::ostream& os, const Time& ti)
        << std::setfill('0') << std::setw(2) << ti.mm << ':' 
        << std::setfill('0') << std::setw(2) << ti.ss;
     return os;
+}
+
+std::istream& operator>>(std::istream &is, Time &ti)
+{
+  char c;
+  is >> ti.hh >> c >> ti.mm >> c >> ti.ss;
+  return is;
 }
 
 Time Time::operator+(const Time &rhs) const

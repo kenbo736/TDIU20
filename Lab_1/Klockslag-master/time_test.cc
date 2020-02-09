@@ -128,6 +128,15 @@ TEST_CASE ("remove of one")
     CHECK(string(--Time{0,58,0}) == "00:57:59");
     CHECK(string(--Time{1,0,0}) == "00:59:59");
 }
+
+TEST_CASE ("format of input")
+{
+    std::stringstream ss;
+    ss << "00:01:00";
+    Time t1{}; 
+    ss >> t1;
+    CHECK(t1.to_string() == "00:01:00");
+}
 // the following line will halt the compilation process. Move it
 // one test case at the time and then start creating your own test
 // cases
