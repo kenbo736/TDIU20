@@ -5,25 +5,19 @@
 #include <sstream>
 #include <algorithm>
 
-// detta är en kommentar
-
 class Time {
   public:
-    //void set_hour();
-    //void set_minute();
-    //void set_second();
     int hour();
     int minute();
     int second();
     bool is_am();
     std::string to_string(bool am_pm_format = false);
-    // konstruktor för att bestämma antalet argument
-    Time(int h, int m, int s);
+
+    Time(int h, int m, int s); // konstruktor för att bestämma antalet argument
     Time(std::string s);
     Time()
     {}
-    friend std::ostream& operator<<(std::ostream &os, const Time &ti); //fråga om friend
-    friend std::istream& operator>>(std::istream &is, Time &ti);
+
     Time operator+(const Time &rhs) const;
     Time operator-(const Time &rhs) const;
     Time& operator++();
@@ -31,15 +25,16 @@ class Time {
     Time& operator--();
     Time operator--(int);
 
-  
-  friend bool operator <(Time const & lhs, Time const & rhs);
-  friend bool operator >(Time const & lhs, Time const & rhs);
-  friend bool operator ==(Time const & lhs, Time const & rhs);
-  friend bool operator !=(Time const & lhs, Time const & rhs);
-  friend bool operator >=(Time const & lhs, Time const & rhs);
-  friend bool operator <=(Time const & lhs, Time const & rhs);
-    
+    friend std::ostream& operator<<(std::ostream &os, const Time &ti);
+    friend std::istream& operator>>(std::istream &is, Time &ti);
 
+    friend bool operator<(Time const & lhs, Time const & rhs);
+    friend bool operator>(Time const & lhs, Time const & rhs);
+    friend bool operator==(Time const & lhs, Time const & rhs);
+    friend bool operator!=(Time const & lhs, Time const & rhs);
+    friend bool operator>=(Time const & lhs, Time const & rhs);
+    friend bool operator<=(Time const & lhs, Time const & rhs);
+    
   private:
     int hh{};
     int mm{};

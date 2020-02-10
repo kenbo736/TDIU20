@@ -49,19 +49,6 @@ int Time::second()
 {
   return ss;
 }
-/*
-void Time::set_hour(int in_h)
-{
-  this->hh=in_h;
-}
-void Time::set_minute(int in_m)
-{
-  this->mm=in_m;
-}
-void Time::set_second(int in_s)
-{
-  this->ss=in_s;
-}*/
 
 bool Time::is_am()
 {
@@ -204,11 +191,8 @@ Time Time::operator--(int)
   return temp;
 }
 
-
-//--------------------------Jämförelseoperander-------------------------//
 bool operator <(Time const & lhs, Time const & rhs)
 {
-  
   return( lhs.hh < rhs.hh ) 
     or ( lhs.hh == rhs.hh && lhs.mm < rhs.mm )
     or ( lhs.hh  == rhs.hh && lhs.mm == rhs.mm
@@ -239,7 +223,5 @@ bool operator !=(Time const & lhs, Time const & rhs)
 {
   return (lhs < rhs || rhs < lhs);
 }
-
-
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h

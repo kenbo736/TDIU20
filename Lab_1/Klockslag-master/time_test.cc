@@ -146,10 +146,9 @@ TEST_CASE ("comparison operand <")
   CHECK(t < t2);
 
   Time t3{12,2,0};
-  Time t4{14,33,01};
+  Time t4{14,33,1};
   CHECK_FALSE(t4 < t3);
 }
-
 
 TEST_CASE ("comparison operand >")
 {
@@ -158,10 +157,9 @@ TEST_CASE ("comparison operand >")
   CHECK_FALSE(t > t2  );
 
   Time t3{12,2,0};
-  Time t4{14,33,01};
+  Time t4{14,33,1};
   CHECK( t4 > t3 );
 }
-
 
 TEST_CASE ("comparison operand <=")
 {
@@ -170,7 +168,7 @@ TEST_CASE ("comparison operand <=")
   CHECK(t <= t2  );
 
   Time t3{12,2,0};
-  Time t4{14,33,01};
+  Time t4{14,33,1};
   CHECK_FALSE( t4 <= t3 );
 }
 
@@ -181,7 +179,7 @@ TEST_CASE ("comparison operand >=")
   CHECK(t >=t2  );
 
   Time t3{12,2,0};
-  Time t4{11,33,01};
+  Time t4{11,33,1};
   CHECK_FALSE( t4 >= t3 );
 }
 
@@ -192,7 +190,7 @@ TEST_CASE ("comparison operand ==")
   CHECK(t == t2  );
 
   Time t3{12,2,0};
-  Time t4{14,33,01};
+  Time t4{14,33,1};
   CHECK_FALSE( t4 == t3 );
 }
 
