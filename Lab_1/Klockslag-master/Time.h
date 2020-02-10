@@ -30,6 +30,14 @@ class Time {
     Time operator++(int);
     Time& operator--();
     Time operator--(int);
+
+  
+  friend bool operator <(Time const & lhs, Time const & rhs);
+  friend bool operator >(Time const & lhs, Time const & rhs);
+  friend bool operator ==(Time const & lhs, Time const & rhs);
+  friend bool operator !=(Time const & lhs, Time const & rhs);
+  friend bool operator >=(Time const & lhs, Time const & rhs);
+  friend bool operator <=(Time const & lhs, Time const & rhs);
     
 
   private:

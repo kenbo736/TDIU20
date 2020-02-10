@@ -129,6 +129,7 @@ TEST_CASE ("remove of one")
     CHECK(string(--Time{1,0,0}) == "00:59:59");
 }
 
+
 TEST_CASE ("format of input")
 {
     std::stringstream ss;
@@ -137,6 +138,76 @@ TEST_CASE ("format of input")
     ss >> t1;
     CHECK(t1.to_string() == "00:01:00");
 }
+
+TEST_CASE ("comparison operand <")
+{
+  Time t{12,0,0};
+  Time t2{12,13,0};
+  CHECK(t < t2);
+
+  Time t3{12,2,0};
+  Time t4{14,33,01};
+  CHECK_FALSE(t4 < t3);
+}
+
+
+TEST_CASE ("comparison operand >")
+{
+  Time t{12,0,0};
+  Time t2{12,13,0};
+  CHECK_FALSE(t > t2  );
+
+  Time t3{12,2,0};
+  Time t4{14,33,01};
+  CHECK( t4 > t3 );
+}
+
+
+TEST_CASE ("comparison operand <=")
+{
+  Time t{12,0,0};
+  Time t2{12,0,0};
+  CHECK(t <= t2  );
+
+  Time t3{12,2,0};
+  Time t4{14,33,01};
+  CHECK_FALSE( t4 <= t3 );
+}
+
+TEST_CASE ("comparison operand >=")
+{
+  Time t{12,0,0};
+  Time t2{12,0,0};
+  CHECK(t >=t2  );
+
+  Time t3{12,2,0};
+  Time t4{11,33,01};
+  CHECK_FALSE( t4 >= t3 );
+}
+
+TEST_CASE ("comparison operand ==")
+{
+  Time t{12,0,0};
+  Time t2{12,0,0};
+  CHECK(t == t2  );
+
+  Time t3{12,2,0};
+  Time t4{14,33,01};
+  CHECK_FALSE( t4 == t3 );
+}
+
+TEST_CASE ("comparison operand !=")
+{
+  Time t{12,20,0};
+  Time t2{12,0,0};
+  CHECK(t != t2  );
+
+  Time t3{12,2,0};
+  Time t4{12,2,0};
+  CHECK_FALSE( t4 != t3 );
+}
+
+
 // the following line will halt the compilation process. Move it
 // one test case at the time and then start creating your own test
 // cases

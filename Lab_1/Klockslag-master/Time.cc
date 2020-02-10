@@ -203,5 +203,43 @@ Time Time::operator--(int)
   --*this;
   return temp;
 }
+
+
+//--------------------------Jämförelseoperander-------------------------//
+bool operator <(Time const & lhs, Time const & rhs)
+{
+  
+  return( lhs.hh < rhs.hh ) 
+    or ( lhs.hh == rhs.hh && lhs.mm < rhs.mm )
+    or ( lhs.hh  == rhs.hh && lhs.mm == rhs.mm
+	 && lhs.ss < rhs.ss );
+}
+
+bool operator >(Time const & lhs, Time const & rhs)
+{
+  return (rhs < lhs);
+}
+
+bool operator <=(Time const & lhs, Time const & rhs)
+{
+  return !(rhs < lhs);
+}
+
+bool operator >=(Time const & lhs, Time const & rhs)
+{
+  return !(lhs < rhs);
+}
+
+bool operator ==(Time const & lhs, Time const & rhs)
+{
+  return !(lhs < rhs || rhs < lhs);
+}
+
+bool operator !=(Time const & lhs, Time const & rhs)
+{
+  return (lhs < rhs || rhs < lhs);
+}
+
+
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h
