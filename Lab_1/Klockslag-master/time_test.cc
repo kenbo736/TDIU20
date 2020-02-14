@@ -114,6 +114,7 @@ TEST_CASE ("subtraction of a second")
     CHECK(string(t2-Time{0,3,0}) == "01:59:04");
     CHECK(string(t2-Time{0,3,5}) == "01:58:59");
     CHECK(string(t2-Time{1,3,5}) == "00:58:59");
+
 }
 
 TEST_CASE ("add of one")

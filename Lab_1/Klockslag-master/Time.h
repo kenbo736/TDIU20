@@ -7,9 +7,9 @@
 
 class Time {
   public:
-    int hour();
-    int minute();
-    int second();
+    int hour() const;
+    int minute() const;
+    int second() const;
     bool is_am();
     std::string to_string(bool am_pm_format = false);
 
@@ -25,16 +25,13 @@ class Time {
     Time& operator--();
     Time operator--(int);
 
-    friend std::ostream& operator<<(std::ostream &os, const Time &ti);
-    friend std::istream& operator>>(std::istream &is, Time &ti);
+    bool operator<(Time const & rhs) const;
+    bool operator>(Time const & rhs) const;
+    bool operator==(Time const & rhs) const;
+    bool operator!=(Time const & rhs) const;
+    bool operator>=(Time const & rhs) const;
+    bool operator<=(Time const & rhs) const;
 
-    friend bool operator<(Time const & lhs, Time const & rhs);
-    friend bool operator>(Time const & lhs, Time const & rhs);
-    friend bool operator==(Time const & lhs, Time const & rhs);
-    friend bool operator!=(Time const & lhs, Time const & rhs);
-    friend bool operator>=(Time const & lhs, Time const & rhs);
-    friend bool operator<=(Time const & lhs, Time const & rhs);
-    
   private:
     int hh{};
     int mm{};
@@ -42,6 +39,9 @@ class Time {
     void constructHelper();
     int calculateOffset();
 };
+
+std::ostream& operator<<(std::ostream &os, const Time &ti);
+std::istream& operator>>(std::istream &is, Time &ti);
 
 std::string string(Time ti);
 #endif

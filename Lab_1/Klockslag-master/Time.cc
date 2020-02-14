@@ -11,6 +11,7 @@ Time::Time(std::string s)
 {
   std::replace(s.begin(), s.end(), ':', ' ');
   std::stringstream timestream{s};
+
   timestream >> this->hh >> this->mm >> this->ss;
   constructHelper();
 }
@@ -36,17 +37,17 @@ void Time::constructHelper()
   }
 }
 
-int Time::hour()
+int Time::hour() const
 {
   return hh;
 }
 
-int Time::minute()
+int Time::minute() const
 {
   return mm;
 }
 
-int Time::second()
+int Time::second() const
 {
   return ss;
 }
@@ -99,17 +100,18 @@ std::string string(Time ti)
 
 std::ostream& operator<<(std::ostream& os, const Time& ti)
 {
-    os << std::setfill('0') << std::setw(2) << ti.hh << ':'
-       << std::setfill('0') << std::setw(2) << ti.mm << ':'
-       << std::setfill('0') << std::setw(2) << ti.ss;
+    os << std::setfill('0') << std::setw(2) << ti.hour() << ':'
+       << std::setfill('0') << std::setw(2) << ti.minute() << ':'
+       << std::setfill('0') << std::setw(2) << ti.second();
     return os;
 }
+
 
 std::istream& operator>>(std::istream &is, Time &ti)
 {
     char c;
     int temp_hh, temp_mm, temp_ss;
-    is >> ti.hh >> c >> ti.mm >> c >> ti.ss;
+    is >> temp_hh >> c >> temp_mm >> c >> temp_ss;
 
     try
     {
@@ -200,37 +202,37 @@ Time Time::operator--(int)
   return temp;
 }
 
-bool operator <(Time const & lhs, Time const & rhs)
+bool Time::operator <(Time const & rhs) const
 {
-  return( lhs.hh < rhs.hh )
-    or ( lhs.hh == rhs.hh && lhs.mm < rhs.mm )
-    or ( lhs.hh  == rhs.hh && lhs.mm == rhs.mm
-	 && lhs.ss < rhs.ss );
+  return( hour() < rhs.hour() )
+    or ( hour() == rhs.hour() && minute() < rhs.minute() )
+    or ( hour()  == rhs.hour() && minute() == rhs.minute()
+	 && second() < rhs.second() );
 }
 
-bool operator >(Time const & lhs, Time const & rhs)
+bool Time::operator >(Time const & rhs) const
 {
-  return (rhs < lhs);
+  return (rhs < *this);
 }
 
-bool operator <=(Time const & lhs, Time const & rhs)
+bool Time::operator <=(Time const & rhs) const
 {
-  return !(rhs < lhs);
+  return !(rhs < *this);
 }
 
-bool operator >=(Time const & lhs, Time const & rhs)
+bool Time::operator >=(Time const & rhs) const
 {
-  return !(lhs < rhs);
+  return !(*this < rhs);
 }
 
-bool operator ==(Time const & lhs, Time const & rhs)
+bool Time::operator ==(Time const & rhs) const
 {
-  return !(lhs < rhs || rhs < lhs);
+  return !(*this < rhs || rhs < *this);
 }
 
-bool operator !=(Time const & lhs, Time const & rhs)
+bool Time::operator !=(Time const & rhs) const
 {
-  return (lhs < rhs || rhs < lhs);
+  return (*this < rhs || rhs < *this);
 }
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h
