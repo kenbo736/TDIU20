@@ -6,8 +6,8 @@
 #include "Time.h"
 
 //using namespace std;
-// här lägger ni era testfall. 
-// Jobba enligt TDD; 
+// här lägger ni era testfall.
+// Jobba enligt TDD;
 //  1. Lägg till testfall
 //  2. Testa
 //  3. Lägg till (minsta möjliga) implementation
@@ -103,6 +103,7 @@ TEST_CASE ("addition of a second")
     CHECK(string(t2+Time{0,58,57}) == "02:01:01");
     CHECK(string(t2+Time{0,57,57}) == "02:00:01");
     CHECK(string(t2+Time{0,56,57}) == "01:59:01");
+    CHECK(string(t2+Time{22,57,57}) == "00:00:01");
 }
 
 TEST_CASE ("subtraction of a second")
@@ -134,9 +135,17 @@ TEST_CASE ("format of input")
 {
     std::stringstream ss;
     ss << "00:01:00";
-    Time t1{}; 
+    Time t1{};
     ss >> t1;
     CHECK(t1.to_string() == "00:01:00");
+}
+TEST_CASE ("format of input 2")
+{
+    std::stringstream ss;
+    ss << "00:01:70";
+    Time t1{};
+    ss >> t1;
+    CHECK(ss.fail());
 }
 
 TEST_CASE ("comparison operand <")
@@ -212,4 +221,3 @@ TEST_CASE ("comparison operand !=")
 #if 0
 
 #endif
-

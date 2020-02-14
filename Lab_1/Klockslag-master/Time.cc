@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <unistd.h>
 #include <sstream>
+#include <stdexcept>
 
 #include "Time.h"
 
@@ -43,7 +44,7 @@ int Time::hour()
 int Time::minute()
 {
   return mm;
-} 
+}
 
 int Time::second()
 {
@@ -64,14 +65,14 @@ bool Time::is_am()
 
 std::string Time::to_string(bool am_pm_format)
 {
-  std::stringstream inStream; 
+  std::stringstream inStream;
   std::string am_pm {is_am() ? " am" : " pm"}; //shorthand if!
   //int offset{calculateOffset()};
 
-  inStream << std::setfill('0') << std::setw(2) << hh+(am_pm_format ? calculateOffset() : 0) << ":" 
-           << std::setfill('0') << std::setw(2) << mm << ":" << std::setfill('0') << std::setw(2) 
+  inStream << std::setfill('0') << std::setw(2) << hh+(am_pm_format ? calculateOffset() : 0) << ":"
+           << std::setfill('0') << std::setw(2) << mm << ":" << std::setfill('0') << std::setw(2)
            << ss << std::setw(0) << (am_pm_format ? am_pm : "");
-  
+
   return inStream.str();
 }
 
@@ -98,21 +99,31 @@ std::string string(Time ti)
 
 std::ostream& operator<<(std::ostream& os, const Time& ti)
 {
-    os << std::setfill('0') << std::setw(2) << ti.hh << ':' 
-       << std::setfill('0') << std::setw(2) << ti.mm << ':' 
+    os << std::setfill('0') << std::setw(2) << ti.hh << ':'
+       << std::setfill('0') << std::setw(2) << ti.mm << ':'
        << std::setfill('0') << std::setw(2) << ti.ss;
     return os;
 }
 
 std::istream& operator>>(std::istream &is, Time &ti)
 {
-  char c;
-  is >> ti.hh >> c >> ti.mm >> c >> ti.ss;
+    char c;
+    int temp_hh, temp_mm, temp_ss;
+    is >> ti.hh >> c >> ti.mm >> c >> ti.ss;
+
+    try
+    {
+        ti = Time{temp_hh, temp_mm, temp_ss};
+    }
+    catch(std::exception& e)
+    {
+      is.setstate(std::ios_base::failbit);
+    }
   return is;
 }
 
 Time Time::operator+(const Time &rhs) const
-{ 
+{
   Time t3;
   t3.ss = ss + rhs.ss;
   t3.mm = mm + rhs.mm;
@@ -128,22 +139,21 @@ Time Time::operator+(const Time &rhs) const
     t3.hh = t3.hh + 1;
     t3.mm = t3.mm % 60;
   }
-  
+
   if (t3.hh > 23)
   {
     t3.hh = 0;
-    t3.mm = 0;
-    t3.ss = 0;
   }
-  return t3; 
+  return t3;
 }
 
 Time Time::operator-(const Time &rhs) const
-{ 
+{
   Time t3;
   t3.ss = ss - rhs.ss;
   t3.mm = mm - rhs.mm;
   t3.hh = hh - rhs.hh;
+
   if (t3.ss < 0)
   {
     t3.mm = t3.mm - 1;
@@ -155,20 +165,19 @@ Time Time::operator-(const Time &rhs) const
     t3.hh = t3.hh - 1;
     t3.mm = 60 + (t3.mm % 60);
   }
-  
-  if (t3.hh > 23)
+
+  if (t3.hh < 0)
   {
-    t3.hh = 0;
-    t3.mm = 0;
-    t3.ss = 0;
+    t3.hh = 24 + (t3.hh % 24);
   }
-  return t3; 
+
+  return t3;
 }
 
 Time& Time::operator++()
 {
   *this = *this + Time{0,0,1};
-  return *this; 
+  return *this;
 }
 
 Time Time::operator++(int)
@@ -181,7 +190,7 @@ Time Time::operator++(int)
 Time& Time::operator--()
 {
   *this = *this - Time{0,0,1};
-  return *this; 
+  return *this;
 }
 
 Time Time::operator--(int)
@@ -193,7 +202,7 @@ Time Time::operator--(int)
 
 bool operator <(Time const & lhs, Time const & rhs)
 {
-  return( lhs.hh < rhs.hh ) 
+  return( lhs.hh < rhs.hh )
     or ( lhs.hh == rhs.hh && lhs.mm < rhs.mm )
     or ( lhs.hh  == rhs.hh && lhs.mm == rhs.mm
 	 && lhs.ss < rhs.ss );
