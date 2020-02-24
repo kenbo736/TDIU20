@@ -21,7 +21,7 @@ Time::Time(int h, int m, int s) : hh(h), mm(m), ss(s) //member initializer list
   constructHelper();
 }
 
-void Time::constructHelper()
+void Time::constructHelper() const
 {
   if(this->hh > 23 || this->hh < 0)
   {
@@ -52,7 +52,7 @@ int Time::second() const
   return ss;
 }
 
-bool Time::is_am()
+bool Time::is_am() const
 {
   if(hh > 11)
   {
@@ -64,20 +64,48 @@ bool Time::is_am()
   }
 }
 
-std::string Time::to_string(bool am_pm_format)
+std::string Time::to_string(bool const &am_pm_format) const
 {
   std::stringstream inStream;
-  std::string am_pm {is_am() ? " am" : " pm"}; //shorthand if!
-  //int offset{calculateOffset()};
 
-  inStream << std::setfill('0') << std::setw(2) << hh+(am_pm_format ? calculateOffset() : 0) << ":"
-           << std::setfill('0') << std::setw(2) << mm << ":" << std::setfill('0') << std::setw(2)
-           << ss << std::setw(0) << (am_pm_format ? am_pm : "");
+  std::string am_pm;
+
+  if(is_am() == true)
+  {
+    am_pm = " am";
+  }
+  else if(is_am() == false)
+  {
+    am_pm = " pm";
+  }
+
+  inStream << std::setfill('0') << std::setw(2);
+
+  if(am_pm_format == true)
+  {
+    inStream << hh+calculateOffset();
+  }
+  else if(am_pm_format == false)
+  {
+    inStream << hh;
+  }
+
+  inStream << ":" << std::setfill('0') << std::setw(2) << mm << 
+              ":" << std::setfill('0') << std::setw(2) << ss << std::setw(0);
+
+  if(am_pm_format == true)
+  {
+    inStream << am_pm;
+  }
+  else if(am_pm_format == false)
+  {
+    inStream << "";
+  } 
 
   return inStream.str();
 }
 
-int Time::calculateOffset()
+int Time::calculateOffset() const
 {
   if(hh == 0)
   {
@@ -93,16 +121,14 @@ int Time::calculateOffset()
   }
 }
 
-std::string string(Time ti)
+std::string string(Time const &ti)
 {
   return ti.to_string();
 }
 
-std::ostream& operator<<(std::ostream& os, const Time& ti)
+std::ostream& operator<<(std::ostream &os, Time const &ti)
 {
-    os << std::setfill('0') << std::setw(2) << ti.hour() << ':'
-       << std::setfill('0') << std::setw(2) << ti.minute() << ':'
-       << std::setfill('0') << std::setw(2) << ti.second();
+    os << ti.to_string();
     return os;
 }
 
@@ -124,7 +150,7 @@ std::istream& operator>>(std::istream &is, Time &ti)
   return is;
 }
 
-Time Time::operator+(const Time &rhs) const
+Time Time::operator+(Time const &rhs) const
 {
   Time t3;
   t3.ss = ss + rhs.ss;
@@ -132,24 +158,49 @@ Time Time::operator+(const Time &rhs) const
   t3.hh = hh + rhs.hh;
   if (t3.ss > 59)
   {
-    t3.mm = t3.mm + 1;
+    t3.mm = t3.mm + (t3.ss/60);
     t3.ss = t3.ss % 60;
   }
 
   if (t3.mm > 59)
   {
-    t3.hh = t3.hh + 1;
+    t3.hh = t3.hh + (t3.mm/60);
     t3.mm = t3.mm % 60;
   }
 
   if (t3.hh > 23)
   {
-    t3.hh = 0;
+    t3.hh = t3.hh % 24;
   }
   return t3;
 }
 
-Time Time::operator-(const Time &rhs) const
+Time Time::operator+(int const &rhs) const
+{
+  Time t3;
+  t3.ss = ss + rhs;
+  t3.mm = mm;
+  t3.hh = hh;
+  if (t3.ss > 59)
+  {
+    t3.mm = t3.mm + (t3.ss/60); 
+    t3.ss = t3.ss % 60;
+  }
+
+  if (t3.mm > 59)
+  {
+    t3.hh = t3.hh + (t3.mm/60);
+    t3.mm = t3.mm % 60;
+  }
+
+  if (t3.hh > 23)
+  {
+    t3.hh = t3.hh % 24;
+  }
+  return t3;
+}
+
+Time Time::operator-(Time const &rhs) const
 {
   Time t3;
   t3.ss = ss - rhs.ss;
@@ -158,14 +209,24 @@ Time Time::operator-(const Time &rhs) const
 
   if (t3.ss < 0)
   {
-    t3.mm = t3.mm - 1;
+    t3.mm = t3.mm + (t3.ss/60)-1;
     t3.ss = 60 + (t3.ss % 60);
+    if (60 + (t3.ss % 60) == 60)
+    {
+      t3.ss = 0;
+      t3.mm = t3.mm+1;
+    }
   }
 
   if (t3.mm < 0)
   {
-    t3.hh = t3.hh - 1;
+    t3.hh = t3.hh + (t3.mm/60)-1;
     t3.mm = 60 + (t3.mm % 60);
+    if (60 + (t3.mm % 60) == 60)
+    {
+      t3.mm = 0;
+      t3.hh = t3.hh+1;
+    }
   }
 
   if (t3.hh < 0)
@@ -173,6 +234,42 @@ Time Time::operator-(const Time &rhs) const
     t3.hh = 24 + (t3.hh % 24);
   }
 
+  return t3;
+}
+
+Time Time::operator-(int const &rhs) const
+{
+  Time t3;
+  t3.ss = ss - rhs;
+  t3.mm = mm;
+  t3.hh = hh;
+
+  if (t3.ss < 0)
+  {
+    t3.mm = t3.mm + (t3.ss/60)-1;
+    t3.ss = 60 + (t3.ss % 60);
+    if (60 + (t3.ss % 60) == 60)
+    {
+      t3.ss = 0;
+      t3.mm = t3.mm+1;
+    }
+  }
+
+  if (t3.mm < 0)
+  {
+    t3.hh = t3.hh + (t3.mm/60)-1;
+    t3.mm = 60 + (t3.mm % 60);
+    if (60 + (t3.mm % 60) == 60)
+    {
+      t3.mm = 0;
+      t3.hh = t3.hh+1;
+    }
+  }
+
+  if (t3.hh < 0)
+  {
+    t3.hh = 24 + (t3.hh % 24);
+  }
   return t3;
 }
 
@@ -202,37 +299,35 @@ Time Time::operator--(int)
   return temp;
 }
 
-bool Time::operator <(Time const & rhs) const
+bool Time::operator <(Time const &rhs) const
 {
-  return( hour() < rhs.hour() )
-    or ( hour() == rhs.hour() && minute() < rhs.minute() )
-    or ( hour()  == rhs.hour() && minute() == rhs.minute()
-	 && second() < rhs.second() );
+  return(hour() < rhs.hour())
+     or (hour() == rhs.hour() && minute() < rhs.minute())
+     or (hour()  == rhs.hour() && minute() == rhs.minute() && second() < rhs.second());
 }
 
-bool Time::operator >(Time const & rhs) const
+// Kommentar: Bra �teranv�ndning av operator<!
+bool Time::operator >(Time const &rhs) const
 {
   return (rhs < *this);
 }
 
-bool Time::operator <=(Time const & rhs) const
+bool Time::operator <=(Time const &rhs) const
 {
   return !(rhs < *this);
 }
 
-bool Time::operator >=(Time const & rhs) const
+bool Time::operator >=(Time const &rhs) const
 {
   return !(*this < rhs);
 }
 
-bool Time::operator ==(Time const & rhs) const
+bool Time::operator ==(Time const &rhs) const
 {
   return !(*this < rhs || rhs < *this);
 }
 
-bool Time::operator !=(Time const & rhs) const
+bool Time::operator !=(Time const &rhs) const
 {
   return (*this < rhs || rhs < *this);
 }
-// I denna fil läggs definitionerna (implementationen) av de funktioner
-// som deklarerats i Time.h
