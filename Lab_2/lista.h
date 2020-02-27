@@ -11,9 +11,12 @@ class Sorted_List{
         Node* dum = new Node; //Skapar en sentinel
         first = dum; //First pekar dum
         last = dum; //Last pekar på dum
+        dum->next = nullptr;
+        dum->prev = nullptr;
     }
     //~Sorted_List();
     void Insert(int newData);
+    void Check();
     private:
     struct Node
     {
@@ -26,17 +29,3 @@ class Sorted_List{
 };
 
 #endif
-
-/*
- ___       _____
-|   |     |     |
-| H |     |  H  |-----
-|   |     |_____|    |
-|   |                |
-|   |         --------
-|   |         V
-|   |      _____
-|   |     |     |
-| T <-----|  T  |
-|___|     |_____|
-*/
