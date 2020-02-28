@@ -16,6 +16,7 @@ class Sorted_List{
     }
     //~Sorted_List();
     void Insert(int newData);
+    void Remove(int newData);
     void Check();
     private:
     struct Node
