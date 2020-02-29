@@ -9,6 +9,7 @@ int main()
     empty_list.Insert(7);
     empty_list.Insert(3);
     empty_list.Insert(3);
+    empty_list.Remove(4);
 
     empty_list.Check();
 
