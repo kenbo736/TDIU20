@@ -6,24 +6,21 @@
 
 class Sorted_List{
     public:
-    Sorted_List() //Konstruktor för att kunna hantera en tom lista
-    {
-        Node* dum = new Node; //Skapar en sentinel
-        first = dum; //First pekar dum
-        last = dum; //Last pekar på dum
-        dum->next = nullptr;
-        dum->prev = nullptr;
-    }
-    //~Sorted_List();
+    Sorted_List(); //Konstruktor för att kunna hantera en tom lista
+    ~Sorted_List(){ Clear(); }
+
     void Insert(int newData);
     void Remove(int newData);
+    void Index(int position);
     void Check();
+    void Clear(); //rensar hela listan
+
     private:
     struct Node
     {
-        Node* prev;
-        int data;
-        Node* next;
+        Node* prev{};
+        int data{};
+        Node* next{};
     };
     Node* first{};
     Node* last{};

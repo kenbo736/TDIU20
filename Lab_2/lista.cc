@@ -1,6 +1,15 @@
 #include <iostream>
 #include "lista.h"
 
+Sorted_List::Sorted_List()
+{
+        Node* dum = new Node; //Skapar en sentinel
+        first = dum; //First pekar dum
+        last = dum; //Last pekar på dum
+        dum->next = nullptr;
+        dum->prev = nullptr;
+}
+
 void Sorted_List::Insert(int newData)
 {
     Node* newNode = new Node;
@@ -29,14 +38,10 @@ void Sorted_List::Insert(int newData)
               if(pos->next->next == nullptr) //undantag
               {
                 newNode->prev = pos; //nodens prev peka på det som pos pekar på
-                //std::cout << pos->data << "            " << newNode->prev->data << std::endl;
                 newNode->next = pos->next; //här säger vi att den nya nodens next ska peka på nästa nod från det som pos next pekar på
-                //std::cout << pos->next->data << "            " << newNode->next->data << std::endl;
                 pos->next = newNode;
-                //std::cout << pos->next->data << std::endl;
                 newNode->next->prev = newNode;
-                //std::cout << pos->next->prev->data << std::endl;
-                //std::cout << pos->prev->data << std::endl;
+
               }
               else
               {
@@ -67,29 +72,55 @@ void Sorted_List::Insert(int newData)
 }
 void Sorted_List::Remove(int newData)
 {
-  Node* temp;
   Node* pos = first;
-
   while(pos->data < newData)
   {
-    //std::cout << pos->data << std::endl;
     pos = pos->next;
   }
-  std::cout << "temp: next-> "<< pos->next->data << "    Data:" << pos->data  << "     prev->" << pos->prev->data << std::endl;
+
   if(pos->data == newData) //Kollar om positonens data är samma sak som det vi vill ta bort
   {
-    
-    //std::cout << pos->next->prev->data << std::endl;
+      if (pos == last)
+      { 
+        std::cout << "sista elementet :( :( :(" << std::endl; 
+        return; 
+      }
 
-    pos->next->prev = pos->prev;
-    temp = pos;
-    pos->prev->next = pos->next;
-    std::cout << temp->data << std::endl;
-    temp->prev = nullptr;
-    temp->next = nullptr;
-    delete temp;
+      pos->next->prev = pos->prev;
+
+      if (pos == first) 
+      {
+        first = pos->next;
+      } 
+      else 
+      {
+        pos->prev->next = pos->next;
+      }
+      delete pos;
   }
 }
+void Sorted_List::Index(int position)
+{
+  int index{};
+  Node* pos = first;
+  while(index < position)
+  {
+    pos = pos->next;
+    index = index + 1;
+  }
+  std::cout << "INDEX: " << position << " har värdet " << pos->data << " i sig. " << std::endl;
+}
+
+void Sorted_List::Clear() {
+  Node* pos = first;
+  while(pos != last) {
+    pos = pos->next;
+    delete first;
+    first = pos;
+  }
+  last->prev = nullptr;
+}
+
 void Sorted_List::Check()
 {
     Node* pos = first;
@@ -108,14 +139,6 @@ void Sorted_List::Check()
         std::cout << "  v  |  " << std::endl;
         pos = pos->next;
         }
-        else if(pos->next == nullptr)
-        {
-            std::cout << " --------" << std::endl;
-            std::cout << "|        |" << std::endl;
-            std::cout << "|   " << pos->data << "    |" << std::endl;
-            std::cout << "| NULL   |" << std::endl;
-            std::cout << " --------" << std::endl;
-        }
         else
         {
             std::cout << " --------" << std::endl;
@@ -127,5 +150,22 @@ void Sorted_List::Check()
             std::cout << "  v  |  " << std::endl;
             pos = pos->next;
         }
+    }
+    if((pos->next == nullptr) && (pos->prev != nullptr))
+    {
+
+            std::cout << " --------" << std::endl;
+            std::cout << "|Prev " << pos->prev->data << "  |" << std::endl;
+            std::cout << "|   " << pos->data << "    | <-------------THIS IS THE SENTINEL" << std::endl;
+            std::cout << "| NULL   |" << std::endl;
+            std::cout << " --------" << std::endl;
+    }
+    else
+    {
+            std::cout << " --------" << std::endl;
+            std::cout << "| NULL   |" << std::endl;
+            std::cout << "|   " << first->data << "    |" << std::endl;
+            std::cout << "|Next  " << pos->next->next->data << " |" << std::endl;
+            std::cout << " --------" << std::endl;
     }
 }
