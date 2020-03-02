@@ -24,50 +24,38 @@ void Sorted_List::Insert(int newData)
     }
     else //Annars om listan har en nod i sig
     {
-        while(pos->next != nullptr) //Medan det som pos pekar på vars next inte lika med nullptr
+      while(pos->next != nullptr) //Medan det som pos pekar på vars next inte lika med nullptr
+      {
+        if(pos->data >= newNode->data)//händer bara om första insättningen är större än positionens värde
         {
-            if(pos->data >= newNode->data)//händer bara om första insättningen är större än positionens värde
-            {
-                newNode->next = pos;
-                pos->prev = newNode;
-                first = newNode;
-                break;
-            }
-            else if(pos->data <= newNode->data) //Kollar om datan är mindre än den nya nodens data
-            {
-              if(pos->next->next == nullptr) //undantag
-              {
-                newNode->prev = pos; //nodens prev peka på det som pos pekar på
-                newNode->next = pos->next; //här säger vi att den nya nodens next ska peka på nästa nod från det som pos next pekar på
-                pos->next = newNode;
-                newNode->next->prev = newNode;
+          newNode->next = pos;
+          pos->prev = newNode;
+          first = newNode;
+          break;
+        }
 
-              }
-              else
-              {
-                while(pos->data < newNode->data) //medans mindre
-                {
-                  if(pos->next->data < newNode->data) //om det som det pekar på två framför är nullptr
-                  {
-                    if(pos->next->next == nullptr)
-                    {
-                      break;
-                    }
-                    pos = pos->next;
-                  }
-                  else
-                  {
-                    break;
-                  }
-                }
-                newNode->prev = pos; //nodens prev peka på det som pos pekar på
-                newNode->next = pos->next; //här säger vi att den nya nodens next ska peka på nästa nod från det som pos next pekar på
-                pos->next = newNode;
-                newNode->next->prev = newNode;
-              }
+        while(pos->data < newNode->data) //medans mindre  
+        {
+          if(pos->next->data < newNode->data) //om det som det pekar på två framför är nullptr
+          {
+            if(pos->next->next == nullptr) // om den är i slutet
+            {
               break;
             }
+            pos = pos->next;
+          }
+          else
+          {
+            break;
+          }
         }
+          
+        newNode->prev = pos; //nodens prev peka på det som pos pekar på
+        newNode->next = pos->next; //här säger vi att den nya nodens next ska peka på nästa nod från det som pos next pekar på
+        pos->next = newNode;
+        newNode->next->prev = newNode;
+        break;
+      }
     }
 }
 void Sorted_List::Remove(int newData)
