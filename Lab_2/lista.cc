@@ -1,13 +1,30 @@
 #include <iostream>
 #include "lista.h"
+#include <stdexcept>
 
 Sorted_List::Sorted_List()
 {
-        Node* dum = new Node; //Skapar en sentinel
-        first = dum; //First pekar dum
-        last = dum; //Last pekar på dum
-        dum->next = nullptr;
-        dum->prev = nullptr;
+  Node* dum = new Node; //Skapar en sentinel
+  first = dum; //First pekar dum
+  last = dum; //Last pekar på dum
+  dum->next = nullptr;
+  dum->prev = nullptr;
+}
+
+Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
+{
+  Node* pos = old_list.last->prev;
+  
+  while(pos != old_list.first)
+  {
+    Insert(pos->data);
+    pos = pos->prev;
+  }
+  if(pos == old_list.first)
+  {
+    Insert(pos->data);
+  }
+  //std::cout << "sdaskjds" << std::endl;
 }
 
 void Sorted_List::Insert(int newData)
@@ -61,7 +78,7 @@ void Sorted_List::Insert(int newData)
 void Sorted_List::Remove(int newData)
 {
   Node* pos = first;
-  while(pos->data < newData)
+  while(pos->data < newData) // kollar om datan är mindre än det vi jämför med
   {
     pos = pos->next;
   }
@@ -89,14 +106,22 @@ void Sorted_List::Remove(int newData)
 }
 void Sorted_List::Index(int position)
 {
-  int index{};
+  int lengthOfList{};
   Node* pos = first;
-  while(index < position)
+  while(pos != last)
   {
     pos = pos->next;
-    index = index + 1;
+    lengthOfList++;
   }
-  std::cout << "INDEX: " << position << " har värdet " << pos->data << " i sig. " << std::endl;
+
+  if((lengthOfList < position) || (position < 0))
+  {
+    std::cout << "out of border" << std::endl;
+  }
+  else
+  {
+    std::cout << "INDEX: " << position << " har värdet " << pos->data << " i sig. " << std::endl;
+  }
 }
 
 void Sorted_List::Clear() {
@@ -109,7 +134,7 @@ void Sorted_List::Clear() {
   last->prev = nullptr;
 }
 
-void Sorted_List::Check()
+void Sorted_List::Display() const
 {
     Node* pos = first;
     std::cout << "------------------------UTSKRIFT------------------------------" << std::endl;

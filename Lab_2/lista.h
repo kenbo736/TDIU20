@@ -7,12 +7,14 @@
 class Sorted_List{
     public:
     Sorted_List(); //Konstruktor för att kunna hantera en tom lista
+    Sorted_List(const Sorted_List &old_list);
     ~Sorted_List(){ Clear(); }
 
     void Insert(int newData);
     void Remove(int newData);
     void Index(int position);
-    void Check();
+    
+    void Display() const;
     void Clear(); //rensar hela listan
 
     private:
