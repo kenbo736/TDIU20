@@ -39,7 +39,7 @@ void Sorted_List::Copy(const Sorted_List &old_list)
 Sorted_List& Sorted_List::operator=(const Sorted_List &old_list)
 {
   std::cout << "hello" << std::endl;
-  Clear(); // deallokerar den gamla listan
+  Clear(); // deallokerar
   Copy(old_list); // Kopierar till den nya listan
   return *this;
 }
