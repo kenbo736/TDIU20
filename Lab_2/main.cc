@@ -22,6 +22,9 @@ int main()
     empty_list.Display();
     Sorted_List list2{empty_list};
     list2.Display();
+    Sorted_List list3{};
+    list3 = empty_list;
+    list3.Display();
 
     return 0;
 }

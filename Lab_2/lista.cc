@@ -13,6 +13,16 @@ Sorted_List::Sorted_List()
 
 Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
 {
+  Copy(old_list);
+}
+
+Sorted_List::~Sorted_List()
+{ 
+  Clear(); 
+}
+
+void Sorted_List::Copy(const Sorted_List &old_list) 
+{
   Node* pos = old_list.last->prev;
   
   while(pos != old_list.first)
@@ -24,7 +34,14 @@ Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
   {
     Insert(pos->data);
   }
-  //std::cout << "sdaskjds" << std::endl;
+}
+
+Sorted_List& Sorted_List::operator=(const Sorted_List &old_list)
+{
+  std::cout << "hello" << std::endl;
+  Clear(); // deallokerar den gamla listan
+  Copy(old_list); // Kopierar till den nya listan
+  return *this;
 }
 
 void Sorted_List::Insert(int newData)
@@ -124,7 +141,8 @@ void Sorted_List::Index(int position)
   }
 }
 
-void Sorted_List::Clear() {
+void Sorted_List::Clear() 
+{
   Node* pos = first;
   while(pos != last) {
     pos = pos->next;

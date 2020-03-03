@@ -6,14 +6,16 @@
 
 class Sorted_List{
     public:
-    Sorted_List(); //Konstruktor för att kunna hantera en tom lista
-    Sorted_List(const Sorted_List &old_list);
-    ~Sorted_List(){ Clear(); }
+    Sorted_List(); // Konstruktor för att kunna hantera en tom lista
+    Sorted_List(const Sorted_List &old_list); // Copy konstructor
+    ~Sorted_List();
+
+    Sorted_List &operator=(const Sorted_List &old_list); // Copy assignment
 
     void Insert(int newData);
     void Remove(int newData);
     void Index(int position);
-    
+    void Copy(const Sorted_List &old_list); //kopierar listan
     void Display() const;
     void Clear(); //rensar hela listan
 
