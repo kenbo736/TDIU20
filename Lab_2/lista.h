@@ -7,20 +7,20 @@
 class Sorted_List{
     public:
     Sorted_List(); // Konstruktor för att kunna hantera en tom lista
-    Sorted_List(const Sorted_List &old_list); // Copy konstructor
+    Sorted_List(Sorted_List const &old_list); // Copy konstructor
     Sorted_List(Sorted_List &&old_list); // Move konstruktor
-    Sorted_List(std::initializer_list<int> &lista);
+    Sorted_List(std::initializer_list<int> const &lista);
     ~Sorted_List();
 
-    Sorted_List &operator=(const Sorted_List &old_list); // Copy assignment
+    Sorted_List &operator=(Sorted_List const &old_list); // Copy assignment
     Sorted_List &operator=(Sorted_List &&old_list); // Move assignment
 
-    void Insert(int newData);
-    void Remove(int newData);
-    int Index(int position);
-    void Copy(const Sorted_List &old_list); //kopierar listan
-    void Display() const;
-    void Clear(); //rensar hela listan
+    void insert(int const newData);
+    void remove(int const newData);
+    int index(int const position) const;
+    void copy(Sorted_List const &old_list); //kopierar listan
+    void display() const;
+    void clear(); //rensar hela listan
 
     private:
     struct Node

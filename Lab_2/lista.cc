@@ -13,17 +13,17 @@ Sorted_List::Sorted_List()
   dum->prev = nullptr;
 }
 
-Sorted_List::Sorted_List(std::initializer_list<int> &lista) : Sorted_List()
+Sorted_List::Sorted_List(std::initializer_list<int> const &lista) : Sorted_List()
 {
   for(int element : lista)
   {
-    Insert(element);
+    insert(element);
   }
 }
 
-Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
+Sorted_List::Sorted_List(Sorted_List const &old_list) : Sorted_List()
 {
-  Copy(old_list);
+  copy(old_list);
 }
 
 Sorted_List::Sorted_List(Sorted_List &&old_list) : Sorted_List()
@@ -35,28 +35,28 @@ Sorted_List::Sorted_List(Sorted_List &&old_list) : Sorted_List()
 
 Sorted_List::~Sorted_List()
 { 
-  Clear(); 
+  clear(); 
 }
 
-void Sorted_List::Copy(const Sorted_List &old_list) 
+void Sorted_List::copy(Sorted_List const &old_list)
 {
   Node* pos = old_list.last->prev;
   
   while(pos != old_list.first)
   {
-    Insert(pos->data);
+    insert(pos->data);
     pos = pos->prev;
   }
   if(pos == old_list.first)
   {
-    Insert(pos->data);
+    insert(pos->data);
   }
 }
 
-Sorted_List& Sorted_List::operator=(const Sorted_List &old_list)
+Sorted_List& Sorted_List::operator=(Sorted_List const &old_list)
 {
-  Clear(); // deallokerar
-  Copy(old_list); // Kopierar till den nya listan
+  clear(); // deallokerar
+  copy(old_list); // Kopierar till den nya listan
   return *this;
 }
 
@@ -67,7 +67,7 @@ Sorted_List& Sorted_List::operator=(Sorted_List &&old_list)
   return *this;
 }
 
-void Sorted_List::Insert(int newData)
+void Sorted_List::insert(const int newData)
 {
     Node* newNode = new Node;
     Node* pos;
@@ -115,7 +115,7 @@ void Sorted_List::Insert(int newData)
       }
     }
 }
-void Sorted_List::Remove(int newData)
+void Sorted_List::remove(const int newData)
 {
   Node* pos = first;
   while(pos->data < newData) // kollar om datan är mindre än det vi jämför med
@@ -144,7 +144,7 @@ void Sorted_List::Remove(int newData)
       delete pos;
   }
 }
-int Sorted_List::Index(int position)
+int Sorted_List::index(const int position) const
 {
   int lengthOfList{};
   Node* pos = first;
@@ -170,7 +170,7 @@ int Sorted_List::Index(int position)
   return pos->data;
 }
 
-void Sorted_List::Clear() 
+void Sorted_List::clear() 
 {
   Node* pos = first;
   while(pos != last) {
@@ -181,7 +181,7 @@ void Sorted_List::Clear()
   last->prev = nullptr;
 }
 
-void Sorted_List::Display() const
+void Sorted_List::display() const
 {
     Node* pos = first;
     std::cout << "------------------------UTSKRIFT------------------------------" << std::endl;
