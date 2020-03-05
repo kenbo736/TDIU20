@@ -19,12 +19,16 @@ int main()
     empty_list.Index(-2);
     //empty_list.Remove(1);
     //empty_list.Clear();
-    empty_list.Display();
-    Sorted_List list2{empty_list};
-    list2.Display();
+    //empty_list.Display();
+    //Sorted_List list2{empty_list};
+    //list2.Display();
     Sorted_List list3{};
     list3 = empty_list;
     list3.Display();
+    Sorted_List listA{};
+    Sorted_List listB{std::move(listA)};
+    Sorted_List listC{} = listaC{};
+    
 
     return 0;
 }

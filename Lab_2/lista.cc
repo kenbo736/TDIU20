@@ -1,6 +1,7 @@
 #include <iostream>
 #include "lista.h"
 #include <stdexcept>
+#include <utility>
 
 Sorted_List::Sorted_List()
 {
@@ -14,6 +15,13 @@ Sorted_List::Sorted_List()
 Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
 {
   Copy(old_list);
+}
+
+Sorted_List::Sorted_List(Sorted_List &&old_list) : Sorted_List()
+{
+
+  std::swap(old_list.first, first);
+  std::swap(old_list.last, last);
 }
 
 Sorted_List::~Sorted_List()
@@ -38,9 +46,15 @@ void Sorted_List::Copy(const Sorted_List &old_list)
 
 Sorted_List& Sorted_List::operator=(const Sorted_List &old_list)
 {
-  std::cout << "hello" << std::endl;
   Clear(); // deallokerar
   Copy(old_list); // Kopierar till den nya listan
+  return *this;
+}
+
+Sorted_List& Sorted_List::operator=(Sorted_List &&old_list)
+{
+  std::swap(old_list.first, first);
+  std::swap(old_list.last, last);
   return *this;
 }
 
