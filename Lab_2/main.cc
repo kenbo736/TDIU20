@@ -12,12 +12,13 @@ int main()
     empty_list.Insert(3);
     //empty_list.Remove(3);
     //empty_list.Remove(9);
-    empty_list.Index(0);
-    empty_list.Index(1);
-    empty_list.Index(2);
-    empty_list.Index(3);
-    empty_list.Index(-2);
-    //empty_list.Remove(1);
+    empty_list.Index(4);
+    empty_list.Display();
+    //empty_list.Index(1);
+    //empty_list.Index(2);
+    //empty_list.Index(3);
+    //empty_list.Index(-2);
+    /*//empty_list.Remove(1);
     //empty_list.Clear();
     //empty_list.Display();
     //Sorted_List list2{empty_list};
@@ -27,7 +28,8 @@ int main()
     list3.Display();
     Sorted_List listA{};
     Sorted_List listB{std::move(listA)};
-    Sorted_List listC{} = listaC{};
+    Sorted_List listC{};
+    listC = std::move(listA);*/
     
 
     return 0;

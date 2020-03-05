@@ -2,6 +2,7 @@
 #include "lista.h"
 #include <stdexcept>
 #include <utility>
+#include <initializer_list>
 
 Sorted_List::Sorted_List()
 {
@@ -10,6 +11,14 @@ Sorted_List::Sorted_List()
   last = dum; //Last pekar på dum
   dum->next = nullptr;
   dum->prev = nullptr;
+}
+
+Sorted_List::Sorted_List(std::initializer_list<int> &lista) : Sorted_List()
+{
+  for(int element : lista)
+  {
+    Insert(element);
+  }
 }
 
 Sorted_List::Sorted_List(const Sorted_List &old_list) : Sorted_List()
@@ -135,7 +144,7 @@ void Sorted_List::Remove(int newData)
       delete pos;
   }
 }
-void Sorted_List::Index(int position)
+int Sorted_List::Index(int position)
 {
   int lengthOfList{};
   Node* pos = first;
@@ -151,8 +160,14 @@ void Sorted_List::Index(int position)
   }
   else
   {
+    pos = first;
+    for(int i=0; i < position; i++)
+    {
+      pos=pos->next;
+    }
     std::cout << "INDEX: " << position << " har värdet " << pos->data << " i sig. " << std::endl;
   }
+  return pos->data;
 }
 
 void Sorted_List::Clear() 

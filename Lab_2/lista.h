@@ -9,6 +9,7 @@ class Sorted_List{
     Sorted_List(); // Konstruktor för att kunna hantera en tom lista
     Sorted_List(const Sorted_List &old_list); // Copy konstructor
     Sorted_List(Sorted_List &&old_list); // Move konstruktor
+    Sorted_List(std::initializer_list<int> &lista);
     ~Sorted_List();
 
     Sorted_List &operator=(const Sorted_List &old_list); // Copy assignment
@@ -16,7 +17,7 @@ class Sorted_List{
 
     void Insert(int newData);
     void Remove(int newData);
-    void Index(int position);
+    int Index(int position);
     void Copy(const Sorted_List &old_list); //kopierar listan
     void Display() const;
     void Clear(); //rensar hela listan
