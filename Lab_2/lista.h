@@ -21,6 +21,9 @@ class Sorted_List{
     void copy(Sorted_List const &old_list); //kopierar listan
     void display() const;
     void clear(); //rensar hela listan
+    int  size () const;
+    bool empty() const;
+    int at (int const & index) const;
 
     private:
     struct Node

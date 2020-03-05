@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <utility>
 #include <initializer_list>
+#include <sstream>
+#include <string>
 
 Sorted_List::Sorted_List()
 {
@@ -34,14 +36,14 @@ Sorted_List::Sorted_List(Sorted_List &&old_list) : Sorted_List()
 }
 
 Sorted_List::~Sorted_List()
-{ 
-  clear(); 
+{
+  clear();
 }
 
 void Sorted_List::copy(Sorted_List const &old_list)
 {
   Node* pos = old_list.last->prev;
-  
+
   while(pos != old_list.first)
   {
     insert(pos->data);
@@ -91,7 +93,7 @@ void Sorted_List::insert(const int newData)
           break;
         }
 
-        while(pos->data < newNode->data) //medans mindre  
+        while(pos->data < newNode->data) //medans mindre
         {
           if(pos->next->data < newNode->data) //om det som det pekar på två framför är nullptr
           {
@@ -106,7 +108,7 @@ void Sorted_List::insert(const int newData)
             break;
           }
         }
-          
+
         newNode->prev = pos; //nodens prev peka på det som pos pekar på
         newNode->next = pos->next; //här säger vi att den nya nodens next ska peka på nästa nod från det som pos next pekar på
         pos->next = newNode;
@@ -126,18 +128,18 @@ void Sorted_List::remove(const int newData)
   if(pos->data == newData) //Kollar om positonens data är samma sak som det vi vill ta bort
   {
       if (pos == last)
-      { 
-        std::cout << "sista elementet :( :( :(" << std::endl; 
-        return; 
+      {
+        std::cout << "sista elementet :( :( :(" << std::endl;
+        return;
       }
 
       pos->next->prev = pos->prev;
 
-      if (pos == first) 
+      if (pos == first)
       {
         first = pos->next;
-      } 
-      else 
+      }
+      else
       {
         pos->prev->next = pos->next;
       }
@@ -170,7 +172,7 @@ int Sorted_List::index(const int position) const
   return pos->data;
 }
 
-void Sorted_List::clear() 
+void Sorted_List::clear()
 {
   Node* pos = first;
   while(pos != last) {
@@ -228,4 +230,47 @@ void Sorted_List::display() const
             std::cout << "|Next  " << pos->next->next->data << " |" << std::endl;
             std::cout << " --------" << std::endl;
     }
+}
+
+
+//Empty
+bool Sorted_List::empty() const
+{
+  return first == last || first == nullptr;
+}
+
+//Size
+int Sorted_List::size() const
+{
+  Node *temp{first};
+  int length{0};
+
+  while(temp != last)
+  {
+    length++;
+    temp = temp -> next;
+  }
+  return length;
+}
+
+
+//At
+int Sorted_List::at (int const & index) const
+{
+  Node* temp{first};
+  int i{1};
+
+  if(first != last)
+  {
+    while( i < index && temp != last)
+    {
+      temp = temp -> next;
+      i++;
+    }
+  }
+  if ((index > (*this).size() || index <= 0) || first == last)
+  {
+    throw std::logic_error{"Ogiltigt index"};
+  }
+  return temp -> data;
 }
