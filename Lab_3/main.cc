@@ -1,60 +1,86 @@
-#include "krets_simulator.h"
 #include <iostream>
-#include <string>
 #include <vector>
+#include "krets_simulator.h"
+#include <stdlib.h>
+#include <errno.h>   // for errno
+#include <limits.h>  // for INT_MAX
 
 using namespace std;
+
 int main(int argc, char* argv[])
 {
-    if(argc!=5)
+    int cycles, writes, volt;
+    double time;
+
+    if (argc < 5)
     {
-        cerr<<"För få inmatningar";
-        return 1;
+	throw invalid_argument("Saknar rätt antal inmatningar");
+    }
+    else if (argc > 5)
+    {
+	throw invalid_argument("För många inmatningar");
     }
 
-    int iterations{};
-    int printouts{};
-    double dt{};
-    try{
-        iterations = stoi(argv[1]);
-        printouts = stoi(argv[2]);
-        dt=stod(argv[3]);
-    }catch(invalid_argument &)
+    char *endptr, *str;
+    long val;
+
+    for (int i{1}; i != argc; i++)
     {
-        cerr<<"Fel inmatning";
-        return 1;
+	str = argv[i];
+	val = strtol(str, &endptr, 10);
+
+	if (endptr == str)
+	{
+	    throw invalid_argument("Error, missing digit.");
+	}
     }
 
-  Connection N{}, P{}, Q124{}, Q23{};
-  vector<Component*> c{};
-  c.push_back(new Batteri{"Bat", N, P, 24.0});
-  c.push_back(new Resistor{"R1", P, Q124, 6.0});
-  c.push_back(new Resistor{"R2", Q124, Q23, 4.0});
-  c.push_back(new Resistor{"R3", Q23, N, 8.0});
-  c.push_back(new Resistor{"R4", Q124, N, 12.0});
-  simulate(iterations, printouts, dt, c);
-  memoryfix(c);
+    cout << endl;
+    cycles = atoi(argv[1]);
+    cout << "Cycles: " << cycles << ", ";
 
-  Connection N2{}, P2{}, R{}, L{};
-  vector<Component*> c2{};
-  c2.push_back(new Batteri{"Bat", N2, P2, 24.0});
-  c2.push_back(new Resistor{"R1", P2, L, 150.0});
-  c2.push_back(new Resistor{"R2", P2, R, 50.0});
-  c2.push_back(new Resistor{"R3", R, L, 100.0});
-  c2.push_back(new Resistor{"R4", L, N2, 300.0});
-  c2.push_back(new Resistor{"R5", R, N2, 250.0});
-  simulate(iterations,printouts, dt, c2);
-  memoryfix(c2);
+    writes = atoi(argv[2]);
+    cout << "Writes: " << writes << ", ";
 
+    time = atof(argv[3]);
+    cout << "Time: " << time << ", ";
 
-  Connection P3{},N3{},L3{},R3{};
-  vector<Component*> c3{};
-  c3.push_back(new Batteri{"Bat", N3, P3, 24.0});
-  c3.push_back(new Resistor{"R1", P3, L3, 150.0});
-  c3.push_back(new Resistor{"R2", P3, R3, 50.0});
-  c3.push_back(new Resistor{"C3", R3, L3, 1.0});
-  c3.push_back(new Resistor{"R4", N3, L3,  300.0});
-  c3.push_back(new Resistor{"C5",N3, R3 ,0.75});
-  simulate(iterations,printouts, dt, c3);
-  memoryfix(c3);
+    volt = atoi(argv[4]);
+    cout << "Volt: " << volt << endl << endl;;
+
+    Connection n, p, Q124, Q23;
+    vector<Component*> net;
+    net.push_back(new Battery("Bat", volt, n, p));
+    net.push_back(new Resistor("R1", 6.0, p, Q124));
+    net.push_back(new Resistor("R2", 4.0, Q124, Q23));
+    net.push_back(new Resistor("R3", 8.0, Q23, n));
+    net.push_back(new Resistor("R4", 12.0, Q124, n));
+    cout << "  Krets 1: " << endl;
+    simulate(net, cycles, writes, time);
+
+    net.clear();
+    cout << "  ______________________________________________________________________";
+    cout << endl;
+    Connection n1,p1,l,r;
+    net.push_back(new Battery("Bat", volt, n1, p1));
+    net.push_back(new Resistor("R1", 150.0, p1, l));
+    net.push_back(new Resistor("R2", 50.0, p1, r));
+    net.push_back(new Resistor("R3", 100.0, r, l));
+    net.push_back(new Resistor("R4", 300.0, l, n1));
+    net.push_back(new Resistor("R5", 250.0, r, n1));
+    cout << "  Krets 2: " << endl;
+    simulate(net, cycles, writes, time);
+    net.clear();
+    cout << "  ______________________________________________________________________";
+    cout << endl;
+    Connection n2,p2,l1,r1;
+    net.push_back(new Battery("Bat", volt, n2, p2));
+    net.push_back(new Resistor("R1", 150.0, p2, l1));
+    net.push_back(new Resistor("R2", 50.0, p2, r1));
+    net.push_back(new Capacitor("C3", 1.0, r1, l1));
+    net.push_back(new Resistor("R4", 300.0, l1, n2));
+    net.push_back(new Capacitor("C5", 0.5, r1, n2));
+    cout << "  Krets 3: " << endl;
+    simulate(net, cycles, writes, time);
+    return 0;
 }

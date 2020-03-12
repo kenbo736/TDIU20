@@ -1,83 +1,71 @@
 #ifndef KRETS_SIMULATOR_H
 #define KRETS_SIMULATOR_H
 #include <iostream>
-#include <string>
 #include <vector>
-
-
-
 
 class Connection
 {
- public:
-    double potential;
+public:
+    double charge = 0;
 };
+
 
 class Component
 {
-
- protected:
+public:
+    virtual double get_voltage() const = 0;
+    virtual double get_current() const = 0;
+    virtual void simulate(double time) = 0;
     std::string name;
-    Connection& a;
-    Connection& b;
-
-
- public:
-  virtual void simulate(double) = 0;
-  virtual double voltage()  = 0;
-  virtual double current()  = 0;
-  void print(std::ostream& os) ;
-  std::string get_name(); void simulate(int iterations, int printouts, double dt, std::vector<Component*> komp);
-
-  Component(std::string n, Connection& x, Connection& y)
-     :name(n), a(x), b(y) {}
-
- virtual ~Component() {}
-
+protected:
+    Connection &a;
+    Connection &b;
+public:
+    Component(std::string const & new_name, Connection & n, Connection & p)
+	:  name{ new_name }, a{ n }, b{ p } {};
+    std::string get_name() const;
+    virtual ~Component() = default;
 };
-void simulate(int iterations, int printouts, double dt, std::vector<Component*> komp);
+
+
+class Battery : public Component
+{
+public:
+    Battery(std::string name, double voltage, Connection & n, Connection & p)
+	: Component{ name, n, p }, voltage{ voltage } {};
+    double get_current() const override;
+    double get_voltage() const override;
+    void simulate(double)  override;
+private:
+    double voltage;
+};
+
+
 class Resistor : public Component
 {
- private:
-  double resistance;
-
- public:
-    void simulate(double time) override;
-     double voltage() override;
-    double current() override;
-
- Resistor(std::string name, Connection& a, Connection& b, double resistance)
-   : Component(name, a, b), resistance(resistance) {}
+public:
+    Resistor(std::string name, double resistance, Connection & n, Connection & p)
+	: Component{ name, n, p }, resistance{ resistance } {};
+    double get_current() const override;
+    double get_voltage() const override;
+    void simulate(double) override;
+private:
+    double resistance;
 };
 
-
-class Batteri: public Component
-{
- private:
-  double volt;
-
- public:
-  void simulate (double) override;
-  double voltage()  override;
-  double current() override;
-
- Batteri(std::string name, Connection& a, Connection& b, double volt)
-   : Component(name, a, b), volt(volt){}
-
-};
 
 class Capacitor : public Component
-{ private:
-  double capacitance;
-  double stored_charge;
-
- public:
-  void simulate(double time) override;
-  double voltage() override;
-  double current() override;
-
- Capacitor(std::string name, Connection& a, Connection& b, double capacitance)
-   : Component(name, a, b), capacitance(capacitance), stored_charge(0) {}
+{
+public:
+    Capacitor( std::string name, double farad, Connection & n, Connection & p)
+	: Component{ name, n, p }, farad{ farad} {};
+    double get_current() const override;
+    double get_voltage() const override;
+    void simulate(double) override;
+private:
+    double farad{0},voltage{0},current{0};
 };
-void memoryfix (std::vector<Component*> v);
+
+void simulate(std::vector<Component*> net,int cycles, int writes, double time);
+
 #endif

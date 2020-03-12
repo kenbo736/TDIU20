@@ -1,130 +1,111 @@
 #include "krets_simulator.h"
 #include <iostream>
-#include <string>
 #include <vector>
 #include <iomanip>
+
 using namespace std;
 
-void Batteri::simulate(double)
+double Component::get_voltage() const
 {
-  a.potential = volt;
-  b.potential = 0.0;
+    return 0.0;
 }
 
-double Batteri::current()
+void simulate(vector<Component*> net,int cycles, int writes, double time)
 {
-  return 0.0;
+    for ( int i{0}; i < (int)net.size(); i++)
+    {
+	cout << setw(12) << setfill(' ') << net.at(i)->name;
+    }
+    cout << endl;
+
+    for ( int i{0}; i < (int)net.size(); i++)
+    {
+	cout << setw(12) << "Volt Curr" ;
+    }
+    cout << endl;
+
+    for (int a{0}; a < writes; a++)
+    {
+	cout << "  ";
+	for (int c{0}; c < cycles/writes; c++)
+	{
+	    for( int d{0}; d < (int)net.size(); d++)
+	    {
+		net.at(d)->simulate(time);
+	    }
+	}
+	for (int b{0}; b < (int)net.size(); b++)
+	{
+	    cout << setw(5) << fixed << setprecision(2) << net.at(b)->get_voltage() << " ";
+	    cout << setw(4) << fixed << setprecision(2) << net.at(b)->get_current() << "  ";
+	}
+    cout << endl;
+    }
 }
 
-double Batteri::voltage()
+std::string Component::get_name() const
 {
-  return volt;
+    return std::string();
+}
+
+double Resistor::get_current() const
+{
+    return ((get_voltage())/resistance);
+}
+
+double Capacitor::get_current() const
+{
+    return current;
+}
+
+double Battery::get_current() const
+{
+    return 0;
+}
+
+double Resistor::get_voltage() const
+{
+    return (a.charge - b.charge);
+}
+
+double Capacitor::get_voltage() const
+{
+    return voltage;
+}
+
+double Battery::get_voltage() const
+{
+    return voltage;
+}
+
+void Battery::simulate(double)
+{
+    a.charge = 0;
+    b.charge = voltage;
+}
+
+void Resistor::simulate(double time)
+{
+    double temp{b.charge};
+    b.charge = (time * ((a.charge - b.charge)/resistance));
+    a.charge = (a.charge-b.charge);
+    b.charge += temp;
 }
 
 void Capacitor::simulate(double time)
 {
-  double charge = current()*time;
-  if (a.potential > b.potential)
+    double temp_charge{0};
+    if (a.charge >= b.charge)
     {
-      stored_charge = stored_charge + charge;
-      a.potential = a.potential - charge;
-      b.potential = b.potential + charge;
+	temp_charge = farad * ((a.charge - b.charge) - voltage) * time;
+	b.charge += temp_charge;
+	a.charge -= temp_charge;
     }
-  else
+    else if(a.charge < b.charge)
     {
-      stored_charge = stored_charge + charge;
-      b.potential = b.potential - charge;
-      a.potential = a.potential + charge;
+        temp_charge = farad * ((b.charge - a.charge) - voltage) * time;
+	a.charge += temp_charge;
+	b.charge -= temp_charge;
     }
-}
-
-double Capacitor::voltage()
-{
-  if (a.potential > b.potential)
-    return (a.potential - b.potential);
-  else
-    return (b.potential - a.potential);
-}
-double Capacitor::current()
-{
-  return (capacitance*(voltage() - stored_charge));
-}
-
-
-void Resistor::simulate(double time)
-{
-  if (a.potential < b.potential)
-    {
-      b.potential = b.potential - (voltage()/resistance)*time;
-      a.potential = a.potential + (voltage()/resistance)*time;
-    }
-  else
-    {
-      a.potential = a.potential - (voltage()/resistance)*time;
-      b.potential = b.potential + (voltage()/resistance)*time;
-    }
-}
-double Resistor::voltage()
-{
-  if (a.potential > b.potential)
-    return (a.potential - b.potential);
-  else
-    return (b.potential - a.potential);
-}
-double Resistor::current()
-{
-  return (voltage()/resistance);
-}
-
-void simulate(int iterations, int printouts, double dt, vector<Component*> komp )
-{
-
-    for (Component* c : komp)
-    {
-        cout << setw(12) << c -> get_name();
-    }
-    cout<<endl;
-    for (unsigned int v{}; v < komp.size();v++)
-    {
-        cout << setw(6) <<  "volt" << setw(6) << "curr";
-
-    }
-    int x= iterations/printouts;
-    cout << endl;
-
-    for (int i{}; i < printouts;i++)
-    {
-        for (int j{}; j < x ;j++)
-	{
-            for (Component* c : komp)
-	    {
-                c -> simulate(dt);
-	    }
-
-	}
-        for (Component* k : komp)
-	{
-            k -> print(cout);
-	}
-        cout << endl;
-    }
-}
-
-void Component::print(std::ostream& os)
-{
-  os << setprecision(2) << fixed << setw(6) << voltage() << setw(6) << current();
-}
-
-string Component::get_name()
-{
-    return name;
-}
-
-void memoryfix (std::vector<Component*> v)
-{
-  for (auto i : v)
-  {
-    delete i;
-  }
-  v.clear();
+    voltage += temp_charge;
 }
