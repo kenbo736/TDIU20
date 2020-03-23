@@ -1,86 +1,78 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include "krets_simulator.h"
-#include <stdlib.h>
-#include <errno.h>   // for errno
-#include <limits.h>  // for INT_MAX
-
-using namespace std;
+#include <sstream>
+#include <stdexcept>
 
 int main(int argc, char* argv[])
 {
-    int cycles, writes, volt;
-    double time;
-
-    if (argc < 5)
+  if(argc == 5) // 5 argument
+  {
+      int iterations{};
+      int rows{};
+      double time{};
+      double volt{};
+    try
     {
-	throw invalid_argument("Saknar rätt antal inmatningar");
+      iterations = std::stoi(argv[1]);
+      rows = std::stoi(argv[2]);
+      time = std::stod(argv[3]);
+      volt = std::stod(argv[4]);
     }
-    else if (argc > 5)
+    catch(std::invalid_argument& e)
     {
-	throw invalid_argument("För många inmatningar");
-    }
-
-    char *endptr, *str;
-    long val;
-
-    for (int i{1}; i != argc; i++)
-    {
-	str = argv[i];
-	val = strtol(str, &endptr, 10);
-
-	if (endptr == str)
-	{
-	    throw invalid_argument("Error, missing digit.");
-	}
+      std::cerr << "invalid argument" << std::endl;
+      exit(0);
     }
 
-    cout << endl;
-    cycles = atoi(argv[1]);
-    cout << "Cycles: " << cycles << ", ";
+    // 1
+    Connect p{}, n{}, x{}, y{}, l{}, r{};
+    std::vector<Component*> net;
+    net.push_back(new Battery("Bat", volt, p, n));
+    net.push_back(new Resistor("Res1", 6.0, p, y));
+    net.push_back(new Resistor("Res2", 4.0, x, y));
+    net.push_back(new Resistor("Res3", 8.0, n, x));
+    net.push_back(new Resistor("Res4", 12.0, n, y));
+    simulate(net, iterations, rows, time);
 
-    writes = atoi(argv[2]);
-    cout << "Writes: " << writes << ", ";
-
-    time = atof(argv[3]);
-    cout << "Time: " << time << ", ";
-
-    volt = atoi(argv[4]);
-    cout << "Volt: " << volt << endl << endl;;
-
-    Connection n, p, Q124, Q23;
-    vector<Component*> net;
-    net.push_back(new Battery("Bat", volt, n, p));
-    net.push_back(new Resistor("R1", 6.0, p, Q124));
-    net.push_back(new Resistor("R2", 4.0, Q124, Q23));
-    net.push_back(new Resistor("R3", 8.0, Q23, n));
-    net.push_back(new Resistor("R4", 12.0, Q124, n));
-    cout << "  Krets 1: " << endl;
-    simulate(net, cycles, writes, time);
-
+    for(Component* c : net)
+    {
+      delete c; //tar bort objekten för att ge tillbaka minne 
+    }
     net.clear();
-    cout << "  ______________________________________________________________________";
-    cout << endl;
-    Connection n1,p1,l,r;
-    net.push_back(new Battery("Bat", volt, n1, p1));
-    net.push_back(new Resistor("R1", 150.0, p1, l));
-    net.push_back(new Resistor("R2", 50.0, p1, r));
-    net.push_back(new Resistor("R3", 100.0, r, l));
-    net.push_back(new Resistor("R4", 300.0, l, n1));
-    net.push_back(new Resistor("R5", 250.0, r, n1));
-    cout << "  Krets 2: " << endl;
-    simulate(net, cycles, writes, time);
+    // 2
+    net.push_back(new Battery("Bat", volt, p, n));
+    net.push_back(new Resistor("Res1", 150.0, p, l));
+    net.push_back(new Resistor("Res2", 50.0, p, r));
+    net.push_back(new Resistor("Res3", 100.0, l, r));
+    net.push_back(new Resistor("Res4", 300.0, n, l));
+    net.push_back(new Resistor("Res5", 250.0, r, n));
+    simulate(net, iterations, rows, time);
+
+    for(Component* c : net)
+    {
+      delete c; //tar bort objekten för att ge tillbaka minne 
+    }
     net.clear();
-    cout << "  ______________________________________________________________________";
-    cout << endl;
-    Connection n2,p2,l1,r1;
-    net.push_back(new Battery("Bat", volt, n2, p2));
-    net.push_back(new Resistor("R1", 150.0, p2, l1));
-    net.push_back(new Resistor("R2", 50.0, p2, r1));
-    net.push_back(new Capacitor("C3", 1.0, r1, l1));
-    net.push_back(new Resistor("R4", 300.0, l1, n2));
-    net.push_back(new Capacitor("C5", 0.5, r1, n2));
-    cout << "  Krets 3: " << endl;
-    simulate(net, cycles, writes, time);
-    return 0;
+    // 3
+    net.push_back(new Battery("Bat", volt, p, n));
+    net.push_back(new Resistor("Res1", 150.0, l, p));
+    net.push_back(new Resistor("Res2", 50.0, p, r));
+    net.push_back(new Capacitor("Cap3", 1.0, l, r));
+    net.push_back(new Resistor("Res4", 300.0, l, n));
+    net.push_back(new Capacitor("Cap5", 0.75, n, r));
+    simulate(net, iterations, rows, time);
+    
+    for(Component* c : net)
+    {
+      delete c; //tar bort objekten för att ge tillbaka minne 
+    }
+    
+  }
+  else
+  {
+    std::cerr << "Too few arguments" << std::endl;
+  }
+  return 0;
 }

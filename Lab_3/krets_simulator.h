@@ -1,71 +1,69 @@
 #ifndef KRETS_SIMULATOR_H
 #define KRETS_SIMULATOR_H
+
 #include <iostream>
 #include <vector>
 
-class Connection
-{
-public:
-    double charge = 0;
-};
+using Connect = double;
 
 
-class Component
+//////////////////////////////////////////////////////////////////////////
+
+class Component // man får se component mer som en abstract klass som
 {
 public:
-    virtual double get_voltage() const = 0;
-    virtual double get_current() const = 0;
-    virtual void simulate(double time) = 0;
-    std::string name;
+  Component(std::string const &name, Connect &a, Connect &b); //default
+  virtual ~Component() = default;
+  double get_voltage() const; // virtual om det är olika functioner
+  virtual double get_current() const = 0; // pure virtual
+  std::string get_name() const;
+  virtual void simulate(double time) = 0; // simulate måste finnas i de classer som äver från component // pure virtual
+
 protected:
-    Connection &a;
-    Connection &b;
-public:
-    Component(std::string const & new_name, Connection & n, Connection & p)
-	:  name{ new_name }, a{ n }, b{ p } {};
-    std::string get_name() const;
-    virtual ~Component() = default;
+  Connect& link_a;
+  Connect& link_b; 
+  std::string name;
 };
 
+////////////////////////////////////////////////////////////////////////
 
-class Battery : public Component
+class Battery : public Component // battery ska ärva delar från component 
 {
 public:
-    Battery(std::string name, double voltage, Connection & n, Connection & p)
-	: Component{ name, n, p }, voltage{ voltage } {};
-    double get_current() const override;
-    double get_voltage() const override;
-    void simulate(double)  override;
+  Battery(std::string const &name, double v, Connect &a, Connect &b); // konstructor
+  void simulate(double time) override;
+  double get_current() const override;
+
 private:
-    double voltage;
+  double voltage;
 };
 
+//////////////////////////////////////////////////////////////////////
 
 class Resistor : public Component
 {
 public:
-    Resistor(std::string name, double resistance, Connection & n, Connection & p)
-	: Component{ name, n, p }, resistance{ resistance } {};
-    double get_current() const override;
-    double get_voltage() const override;
-    void simulate(double) override;
+  Resistor(std::string const &name, double r, Connect &a, Connect &b);
+  void simulate(double time) override;
+  double get_current() const override;
+
 private:
-    double resistance;
+  double resistance;
 };
 
+//////////////////////////////////////////////////////////////////
 
 class Capacitor : public Component
 {
-public:
-    Capacitor( std::string name, double farad, Connection & n, Connection & p)
-	: Component{ name, n, p }, farad{ farad} {};
-    double get_current() const override;
-    double get_voltage() const override;
-    void simulate(double) override;
+public: 
+  Capacitor(std::string const &name, double c, Connect &a, Connect &b);
+  void simulate(double time) override;
+  double get_current() const override;
+
 private:
-    double farad{0},voltage{0},current{0};
+  double capacitance;
+  double charge;
 };
 
-void simulate(std::vector<Component*> net,int cycles, int writes, double time);
-
+void simulate(std::vector<Component*> array, int iterations, int rows, double time);
 #endif
