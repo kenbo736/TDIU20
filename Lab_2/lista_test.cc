@@ -34,6 +34,7 @@ TEST_CASE ("remove function")
 {
 
   Sorted_List l;
+//  l.remove(13);
   l.insert(1);
   l.insert(2);
   l.insert(3);
@@ -41,9 +42,24 @@ TEST_CASE ("remove function")
 
   l.remove(2);
   CHECK(l.size() == 3);
+  //l.remove(15);
   CHECK_FALSE(l.empty());
 
 }
+
+TEST_CASE ("remove 2 function") 
+{
+
+  Sorted_List l;
+//  l.remove(13);
+
+  l.remove(3);
+  CHECK(l.size() == 0);
+  //l.remove(15);
+  CHECK(l.empty());
+
+}
+
 
 TEST_CASE ("copy function")
 {
